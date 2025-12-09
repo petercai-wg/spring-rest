@@ -1,0 +1,35 @@
+"""
+GraphQL schema for Manager and Employee based on PostgreSQL tables.
+
+Tables:
+	Manager(id INT PRIMARY KEY, employeeId, department, transit, created_date, last_updated)
+	Employee(id IDENTITY PRIMARY KEY, firstname, lastname, description, jobLevel, created_date, last_updated, manager_id FK->Manager.id)
+"""
+
+
+
+type Manager {
+	id: Int!
+    employeeId: Int
+	department: String
+	transit: Int
+	employees: [Employee!]!
+}
+
+type Employee {
+	id: Int!
+	firstname: String
+	lastname: String
+	description: String
+    jobLevel: Int
+	manager: Manager
+}
+
+type Query {
+
+    getEmployees:[Employee]!
+    
+	getEmployeesByManagerId(managerId: Int!): [Employee!]!
+}
+
+
