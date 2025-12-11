@@ -26,6 +26,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/rest/**").permitAll()
                         .requestMatchers("/graphql/**").permitAll()
+                        .requestMatchers("/graphiql/**").permitAll()
                         .anyRequest().authenticated())
 
                 // Login methods

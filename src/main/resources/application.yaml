@@ -12,6 +12,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        enable_lazy_load_no_trans: true ## this to solve lazy loading "cannot initialize proxy - no Session" problem
+       
 
   graphql:    
     graphiql:
