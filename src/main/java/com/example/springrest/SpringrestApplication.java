@@ -6,7 +6,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.graphql.client.HttpGraphQlClient;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.example.springrest.dto.EmployeeDTO;
 import com.example.springrest.dto.GqlEmployee;
@@ -30,11 +33,46 @@ public class SpringrestApplication {
 	@Bean
 	public CommandLineRunner startup() {
 		return args -> {
-			log.info("Application started...");
+			log.debug("Application started...");
 
-			getEmployeeDTO();
+			getRestClientEmployeeDTO();
 
 		};
+
+	}
+
+	public void getWebClientEmployeeDTO() {
+		WebClient webClient = WebClient.create("http://localhost:9080");
+
+		List<EmployeeDTO> employeeDTOs = webClient.get()
+				.uri("/rest/byManager/1")
+				.retrieve()
+				.bodyToFlux(EmployeeDTO.class)
+				.collectList()
+				.block();
+
+		log.info("EmployeeDTO list " + employeeDTOs.size());
+
+		for (EmployeeDTO dto : employeeDTOs) {
+			log.info(dto.toString());
+		}
+	}
+
+	public void getRestClientEmployeeDTO() {
+
+		log.debug("RestClient call getRestClientEmployeeDTO ...");
+
+		RestClient restClient = RestClient.builder().baseUrl("http://localhost:9080").build();
+
+		List<EmployeeDTO> employeeDTOs = restClient.get().uri("/rest/byManager/1").retrieve()
+				.body(new ParameterizedTypeReference<List<EmployeeDTO>>() {
+				});
+
+		log.info("EmployeeDTO list " + employeeDTOs.size());
+
+		for (EmployeeDTO dto : employeeDTOs) {
+			log.info(dto.toString());
+		}
 
 	}
 
