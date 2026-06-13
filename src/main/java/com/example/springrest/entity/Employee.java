@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
@@ -41,6 +44,8 @@ public class Employee {
     private LocalDateTime lastUpdated;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    // @ManyToOne(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
     @JoinColumn(name = "manager_id", foreignKey = @ForeignKey(name = "fk_manager"))
     @JsonIgnore // to avoid circular reference during JSON serialization
     private Manager manager;

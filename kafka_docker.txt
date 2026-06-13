@@ -1,0 +1,51 @@
+===========================================  https://kafka.apache.org/quickstart/
+$ docker pull apache/kafka:4.3.0
+
+$ docker run -p 9092:9092 apache/kafka:4.3.0
+
+docker exec -it <container> /bin/bash
+
+/opt/kafka/bin/kafka-topics.sh  --create --topic quickstart-events --bootstrap-server localhost:9092
+/opt/kafka/bin/kafka-topics.sh  --describe --topic quickstart-events --bootstrap-server localhost:9092
+
+/opt/kafka/bin/kafka-console-producer.sh  --topic quickstart-events --bootstrap-server localhost:9092
+
+/opt/kafka/bin/kafka-console-consumer.sh --topic quickstart-events  --bootstrap-server localhost:9092  --from-beginning --partition 0 
+/opt/kafka/bin/kafka-console-consumer.sh --topic quickstart-events  --bootstrap-server localhost:9092 --from-beginning
+
+##  Use kafka-consumer-groups.sh to reset offset
+/opt/kafka/bin/kafka-consumer-groups.sh  --bootstrap-server localhost:9092   --group my-debug-group   --topic quickstart-events   --reset-offsets   --to-offset 2   --execute
+--  view   parttion + group offest info														    --to-earliest, --to-latest  	
+/opt/kafka/bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092   --describe --group my-debug-group 
+
+-- and start consumer with that group
+/opt/kafka/bin/kafka-console-consumer.sh --topic quickstart-events  --bootstrap-server localhost:9092 --group my-debug-group 
+
+--------------------------------------------
+## create with partition
+/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic my-new-topic -partitions 3  --replication-factor 1
+
+## publish message
+/opt/kafka/bin/kafka-console-producer.sh --bootstrap-server localhost:9092  --topic my-new-topic 
+
+##  add a consumer group to topic
+/opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092  --topic my-new-topic  --group my-debug-group 
+## list consumer group
+/opt/kafka/bin/kafka-consumer-groups.sh   --bootstrap-server localhost:9092   --list
+
+/opt/kafka/bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092   --describe --group my-debug-group --state
+/opt/kafka/bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092   --describe --group my-debug-group --members --verbose
+
+## reset offset
+/opt/kafka/bin/kafka-consumer-groups.sh  --bootstrap-server localhost:9092   --group my-debug-group --topic my-new-topic  --reset-offsets   --to-offset 0   --execute
+## print detail messge
+/opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic my-new-topic   --from-beginning   --property print.partition=true   --property print.offset=true --property print.timestamp=true --property print.key=true
+
+/opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic my-new-topic  --group my-debug-group    --property print.partition=true   --property print.offset=true --property print.timestamp=true --property print.key=true
+
+
+## With the GroupCommand tool, we can list groups of all types, including consumer groups, share groups and streams groups. 
+kafka-groups.sh --bootstrap-server localhost:9092 --list
+
+
+/opt/kafka/bin/kafka-console-consumer.sh --topic my-new-topic  --bootstrap-server localhost:9092 --from-beginning

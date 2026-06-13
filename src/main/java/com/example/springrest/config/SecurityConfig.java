@@ -1,5 +1,6 @@
 package com.example.springrest.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,27 +12,33 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.example.springrest.component.RateLimitFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+    @Autowired
+    private RateLimitFilter rateLimitFilter;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
-        http
-                // Disable CSRF for APIs (enable for browser apps)
-                .csrf(csrf -> csrf.disable())
 
+        // Disable CSRF for APIs (enable for browser apps)
+        http.csrf(csrf -> csrf.disable())
+                .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class)
                 // Authorization rules
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/rest/**").permitAll()
                         .requestMatchers("/graphql/**").permitAll()
                         .requestMatchers("/graphiql/**").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/swagger-ui.html").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .anyRequest().authenticated())
-
                 // Login methods
                 .httpBasic(httpBasic -> {
                 }) // Enable Basic Auth
@@ -59,6 +66,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+
         return new BCryptPasswordEncoder();
     }
 }

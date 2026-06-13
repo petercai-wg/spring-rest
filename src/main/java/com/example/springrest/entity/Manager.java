@@ -3,6 +3,8 @@ package com.example.springrest.entity;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,17 +37,7 @@ public class Manager {
     @Column(name = "last_updated", insertable = false, updatable = false)
     private LocalDateTime lastUpdated;
 
-    // @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL, orphanRemoval =
-    // true)
-    // private List<Employee> employees = new ArrayList<>();
+    @OneToMany(mappedBy = "manager", fetch = FetchType.EAGER)
+    private List<Employee> employees = new ArrayList<>();
 
-    // public void addEmployee(Employee e) {
-    // employees.add(e);
-    // e.setManager(this);
-    // }
-
-    // public void removeEmployee(Employee e) {
-    // employees.remove(e);
-    // e.setManager(null);
-    // }
 }

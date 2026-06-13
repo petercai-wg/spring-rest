@@ -1,0 +1,16 @@
+package com.example.springrest.controller;
+
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api")
+public class OAuthController {
+
+    @GetMapping("/oauth2/private")
+    public String privateApi(OAuth2AuthenticationToken token) {
+        return "Authenticated " + token.getPrincipal().getAttribute("email");
+    }
+}

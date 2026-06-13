@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Slf4j
+
 @SpringBootApplication
 public class SpringrestApplication {
 
@@ -35,7 +36,7 @@ public class SpringrestApplication {
 		return args -> {
 			log.debug("Application started...");
 
-			getRestClientEmployeeDTO();
+			// getRestClientEmployeeDTO();
 
 		};
 

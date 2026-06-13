@@ -3,6 +3,7 @@ package com.example.springrest.service;
 import java.util.List;
 
 import org.mapstruct.factory.Mappers;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.example.springrest.dto.EmployeeDTO;
@@ -33,10 +34,20 @@ public class EmployeeService {
     public List<EmployeeDTO> getEmployeeDTO(Integer managerId) {
 
         List<Employee> employees = getEmployeesByManagerId(managerId);
-
         return employees.stream()
                 .map(emp -> employeeMapper.toEmployeeDTO(emp, emp.getManager()))
                 .toList();
+    }
+
+    @Async("asyncTaskExecutor")
+    public void logResult(Employee employee) {
+        try {
+            Thread.sleep(4000L);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        log.info("Print Employee " + employee + " at Thread " + Thread.currentThread().getName());
     }
 
 }

@@ -32,8 +32,12 @@ public class EmployeeRestController {
         String loginUser = SecurityContextHolder.getContext().getAuthentication().getName();
 
         List<Employee> list = service.getAllEmployees();
-        log.info(" GetMapping getAllEmployees  by " + loginUser + " return #employee: " + list.size());
 
+        // Asynchronously log each employee
+        // for (Employee emp : list)
+        // service.logResult(emp);
+
+        log.info(" GetMapping getAllEmployees  by " + loginUser + " return #employee: " + list.size());
         return new ResponseEntity<List<Employee>>(list, new HttpHeaders(),
                 HttpStatus.OK);
     }

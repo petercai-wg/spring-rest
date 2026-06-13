@@ -1,7 +1,38 @@
 server:
   port: ${SERVER_PORT}
 
+
 spring:
+  # kafka:
+  #   bootstrap-servers: localhost:9092
+  #   consumer:
+  #     group-id: my-debug-group
+  #     auto-offset-reset: earliest
+  #     key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  #     value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+  #     properties:
+  #       spring.json.trusted.packages: '*'
+  #   producer:
+  #     key-serializer: org.apache.kafka.common.serialization.StringSerializer
+  #     value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 987799526902-bajj9j8so5a8cctks04d05k4gg7b8slf.apps.googleusercontent.com
+            client-secret: GOCSPX-nXBl6HhVJf7PfweY2E_cIV
+            scope:
+              - openid
+              - profile
+              - email
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+   
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
@@ -32,3 +63,17 @@ logging:
     root: ${LOGGING_LEVEL:info} 
     com.example.springrest: ${APP_LOGGING_LEVEL:debug}
    
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  
+  endpoint:
+    heapdump:
+      access:
+        unrestricted
+
+      
+
